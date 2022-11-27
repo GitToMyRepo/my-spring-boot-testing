@@ -1,9 +1,9 @@
-package com.rest.order;
+package com.mywork.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.order.controllers.OrderController;
-import com.rest.order.models.Order;
-import com.rest.order.services.OrderService;
+import com.mywork.rest.controllers.OrderController;
+import com.mywork.rest.models.Order;
+import com.mywork.rest.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

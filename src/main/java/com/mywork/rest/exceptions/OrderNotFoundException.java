@@ -1,4 +1,4 @@
-package com.rest.order.exceptions;
+package com.mywork.rest.exceptions;
 
 public class OrderNotFoundException extends RuntimeException {
     public OrderNotFoundException(String s) {

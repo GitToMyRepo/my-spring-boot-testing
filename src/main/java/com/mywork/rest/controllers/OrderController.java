@@ -1,7 +1,7 @@
-package com.rest.order.controllers;
+package com.mywork.rest.controllers;
 
-import com.rest.order.models.Order;
-import com.rest.order.services.OrderService;
+import com.mywork.rest.models.Order;
+import com.mywork.rest.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

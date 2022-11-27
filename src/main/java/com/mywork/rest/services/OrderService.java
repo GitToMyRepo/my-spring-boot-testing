@@ -1,8 +1,8 @@
-package com.rest.order.services;
+package com.mywork.rest.services;
 
-import com.rest.order.exceptions.OrderNotFoundException;
-import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
+import com.mywork.rest.repositories.OrderRepository;
+import com.mywork.rest.exceptions.OrderNotFoundException;
+import com.mywork.rest.models.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

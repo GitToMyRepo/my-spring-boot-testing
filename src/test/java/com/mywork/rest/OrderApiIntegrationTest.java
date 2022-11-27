@@ -1,10 +1,10 @@
-package com.rest.order;
+package com.mywork.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
-import com.rest.order.services.OrderService;
+import com.mywork.rest.repositories.OrderRepository;
+import com.mywork.rest.models.Order;
+import com.mywork.rest.services.OrderService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

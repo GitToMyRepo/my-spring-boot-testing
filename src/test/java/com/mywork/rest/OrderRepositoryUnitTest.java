@@ -1,7 +1,7 @@
-package com.rest.order;
+package com.mywork.rest;
 
-import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
+import com.mywork.rest.repositories.OrderRepository;
+import com.mywork.rest.models.Order;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

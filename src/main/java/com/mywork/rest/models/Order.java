@@ -1,4 +1,4 @@
-package com.rest.order.models;
+package com.mywork.rest.models;
 
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
