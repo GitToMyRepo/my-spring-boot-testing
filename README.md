@@ -2,6 +2,8 @@
 
 This project was duplicated from [Unit and Integration Testing in Spring Boot Micro Service](https://salithachathuranga94.medium.com/unit-and-integration-testing-in-spring-boot-micro-service-901fc53b0dff) and its [Git Repository](https://github.com/SalithaUCSC/spring-boot-testing).
 
+This is an experimental project for learning unit testing and integration testing for Spring boot application.
+
 ## MySQL Database
 ### Create and start up MySQL container from a MySQL image with latest tag
 
