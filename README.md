@@ -30,3 +30,4 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
+**Database must be running before executing _OrderApiIntegrationTest_.**
