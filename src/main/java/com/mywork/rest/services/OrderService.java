@@ -28,6 +28,7 @@ public class OrderService {
 
     public boolean deleteOrderById(Long id) {
         Optional<Order> order = orderRepository.findById(id);
+        log.debug("Returned order: {}", order);
         if (order.isPresent()) {
             log.info("Deleting order with Id: {}", id);
             orderRepository.deleteById(id);
