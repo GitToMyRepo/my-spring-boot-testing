@@ -1,4 +1,4 @@
-package com.mywork.rest;
+package com.mywork.rest.it;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
