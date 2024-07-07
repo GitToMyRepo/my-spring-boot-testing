@@ -31,3 +31,46 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
 **Both Database and _OrderServiceApplication_ must be running before executing _OrderApiIntegrationTest_.**
+
+### Use Database
+
+```
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| order-db           |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use order-db
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++--------------------+
+| Tables_in_order-db |
++--------------------+
+| orders             |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from orders;
++----+-------+--------+-----+
+| id | buyer | price  | qty |
++----+-------+--------+-----+
+| 29 | Ada   |     25 |   1 |
+| 30 | peter |     30 |   3 |
+| 32 | Bob   | 125.01 |  10 |
+| 33 | Chris | 134.56 |  12 |
+| 34 | David |    108 |  13 |
++----+-------+--------+-----+
+5 rows in set (0.00 sec)
+
+mysql>
+```
