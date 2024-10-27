@@ -25,6 +25,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId> <!-- Add this -->
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId> <!-- Add this -->
+		</dependency>
 		<!-- Spring Boot Starter Logging -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
