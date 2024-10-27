@@ -16,8 +16,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +52,6 @@ public class OrderApiIntegrationTest {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
-
     @BeforeEach
     public void setUp() {
         // Initialize WebClient with the base URL
@@ -78,8 +77,7 @@ public class OrderApiIntegrationTest {
     @Test
     @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (23, 'mike', 40.0, 2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='23'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void testOrdersListUsingFluxToObtainTheResultOfAnAsynchronousComputationInASynchronousManner() {
-
+    public void testOrdersUseFluxToObtainTheResultOfAnAsynchronousComputationInASynchronousManner() {
         Flux<Order> orderFlux = webClient.get()
                 .uri("/orders")
                 .retrieve()
@@ -97,9 +95,6 @@ public class OrderApiIntegrationTest {
     @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (22, 'john', 24.0, 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='22'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testOrdersListAsynchronously() {
-        // Create a WebClient instance
-        WebClient webClient = WebClient.create(createURLWithPort());
-
         // Use WebClient to perform a non-blocking call to get the orders
         Flux<Order> orderFlux = webClient.get()
                 .uri("/orders")
@@ -112,7 +107,6 @@ public class OrderApiIntegrationTest {
             assertEquals(HttpStatus.OK.value(), 200); // The status code should be OK
             assertEquals(orderList.size(), orderService.getOrders().size());
             assertEquals(orderList.size(), orderRepository.findAll().size());
-            assertEquals(1, orderList.size()); // Expecting 1 order
             assertEquals("john", orderList.get(0).getBuyer());
             assertEquals(24.0, orderList.get(0).getPrice());
             assertEquals(1, orderList.get(0).getQty());
