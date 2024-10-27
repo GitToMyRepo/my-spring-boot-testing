@@ -6,6 +6,7 @@ import com.mywork.rest.repositories.OrderRepository;
 import com.mywork.rest.models.Order;
 import com.mywork.rest.services.OrderService;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,10 +45,20 @@ public class OrderApiIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private WebClient webClient; // WebClient instance for reactive testing
+
     @BeforeAll
     public static void init() {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @BeforeEach
+    public void setUp() {
+        // Initialize WebClient with the base URL
+        webClient = WebClient.builder()
+                .baseUrl("http://localhost:" + port + "/api")
+                .build();
     }
 
     @Test
@@ -62,6 +76,50 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (23, 'mike', 40.0, 2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='23'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testOrdersListUsingFluxToObtainTheResultOfAnAsynchronousComputationInASynchronousManner() {
+
+        Flux<Order> orderFlux = webClient.get()
+                .uri("/orders")
+                .retrieve()
+                .bodyToFlux(Order.class);
+
+        List<Order> orderList = orderFlux.collectList().block(); // Block to get the result
+
+        assertNotNull(orderList);
+        assertEquals(HttpStatus.OK.value(), 200); // The status code should be OK
+        assertEquals(orderList.size(), orderService.getOrders().size());
+        assertEquals(orderList.size(), orderRepository.findAll().size());
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (22, 'john', 24.0, 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='22'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testOrdersListAsynchronously() {
+        // Create a WebClient instance
+        WebClient webClient = WebClient.create(createURLWithPort());
+
+        // Use WebClient to perform a non-blocking call to get the orders
+        Flux<Order> orderFlux = webClient.get()
+                .uri("/orders")
+                .retrieve()
+                .bodyToFlux(Order.class);
+
+        // Collect the results into a List and validate
+        orderFlux.collectList().subscribe(orderList -> {
+            assertNotNull(orderList);
+            assertEquals(HttpStatus.OK.value(), 200); // The status code should be OK
+            assertEquals(orderList.size(), orderService.getOrders().size());
+            assertEquals(orderList.size(), orderRepository.findAll().size());
+            assertEquals(1, orderList.size()); // Expecting 1 order
+            assertEquals("john", orderList.get(0).getBuyer());
+            assertEquals(24.0, orderList.get(0).getPrice());
+            assertEquals(1, orderList.get(0).getQty());
+        });
+    }
+
+    @Test
     @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (20, 'sam', 50.0, 4)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='20'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testOrderById() throws JsonProcessingException {
@@ -76,6 +134,29 @@ public class OrderApiIntegrationTest {
         assertEquals(orderRes, orderService.getOrderById(20L));
         assertEquals(orderRes.getBuyer(), orderService.getOrderById(20L).getBuyer());
         assertEquals(orderRes, orderRepository.findById(20L).orElse(null));
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (21, 'john', 60.0, 2)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='21'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testGetOrderByIdAsMono() {
+        Mono<ResponseEntity<Order>> orderMono = webClient.get()
+                .uri("/orders/{id}", 21)
+                .retrieve()
+                .toEntity(Order.class);
+
+        // Subscribe to Mono to get the result
+        ResponseEntity<Order> orderResponse = orderMono.block(); // Block here for test purposes
+
+        assertNotNull(orderResponse);
+        assertEquals(HttpStatus.OK, orderResponse.getStatusCode());
+
+        Order orderRes = orderResponse.getBody();
+        assertNotNull(orderRes);
+        assertEquals(21, orderRes.getId());
+        assertEquals("john", orderRes.getBuyer());
+        assertEquals(60.0, orderRes.getPrice());
+        assertEquals(2, orderRes.getQty());
     }
 
     @Test
